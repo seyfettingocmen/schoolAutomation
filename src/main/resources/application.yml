@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: school_homework
+  datasource:
+    url: jdbc:mysql://localhost:3306/school_homework
+    username: root
+    password: seyfettin123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  main:
+    allow-circular-references: true
+server:
+  port: 9191
