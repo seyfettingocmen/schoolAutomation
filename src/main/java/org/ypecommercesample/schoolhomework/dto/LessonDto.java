@@ -13,7 +13,7 @@ import java.util.UUID;
 public class LessonDto {
     private UUID id;
     private String name;
-    private TeacherDto teacherDto;
+    private UUID teacherId;
     private ClassBranchDto classBranchDto;
     private List<StudentDto> studentDtoList;
 }

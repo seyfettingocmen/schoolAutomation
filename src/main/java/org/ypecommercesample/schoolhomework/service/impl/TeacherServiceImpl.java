@@ -1,13 +1,10 @@
 package org.ypecommercesample.schoolhomework.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.TeacherDto;
-import org.ypecommercesample.schoolhomework.entity.Lesson;
 import org.ypecommercesample.schoolhomework.entity.Teacher;
 import org.ypecommercesample.schoolhomework.mapper.LessonMapper;
 import org.ypecommercesample.schoolhomework.mapper.TeacherMapper;
-import org.ypecommercesample.schoolhomework.repository.LessonRepository;
 import org.ypecommercesample.schoolhomework.repository.TeacherRepository;
 import org.ypecommercesample.schoolhomework.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +52,7 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setFullName(teacherDto.getFullName());
         teacher.setAge(teacherDto.getAge());
         teacher.setTckn(teacherDto.getTckn());
-        teacher.setLesson(lessonMapper.dtoToEntity(teacherDto.getLessonDto()));
+        teacher.getLesson().setId(teacherDto.getLessonId());
         return teacherMapper.entityToDto(repository.save(teacher));
     }
 

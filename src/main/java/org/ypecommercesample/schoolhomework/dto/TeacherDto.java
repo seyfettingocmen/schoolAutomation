@@ -14,6 +14,6 @@ public class TeacherDto {
     private String fullName;
     private int age;
     private String tckn;
-    private LessonDto lessonDto;
+    private UUID lessonId;
 
 }

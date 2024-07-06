@@ -16,4 +16,4 @@ public class ManagerDto {
     private int age;
     private String tckn;
     private int authority;
-    private SchoolDto schoolDto;}
+    private UUID schoolId;}

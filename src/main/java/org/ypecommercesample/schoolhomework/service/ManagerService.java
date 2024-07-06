@@ -10,5 +10,5 @@ public interface ManagerService {
     List<ManagerDto> getAllManagers();
     ManagerDto updateManager(UUID id, ManagerDto managerDto);
     void deleteManager(UUID id);
-    ManagerDto findManagerBySchoolId(UUID id);
+    ManagerDto findManagerById(UUID id);
 }

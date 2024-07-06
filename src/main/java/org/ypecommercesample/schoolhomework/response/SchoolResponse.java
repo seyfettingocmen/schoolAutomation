@@ -1,7 +1,6 @@
 package org.ypecommercesample.schoolhomework.response;
 
 import lombok.*;
-import org.ypecommercesample.schoolhomework.dto.ClassBranchDto;
 import org.ypecommercesample.schoolhomework.dto.ClassRoomDto;
 import org.ypecommercesample.schoolhomework.dto.ManagerDto;
 

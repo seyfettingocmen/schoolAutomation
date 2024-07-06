@@ -3,7 +3,6 @@ package org.ypecommercesample.schoolhomework.response;
 import lombok.*;
 import org.ypecommercesample.schoolhomework.dto.ClassBranchDto;
 import org.ypecommercesample.schoolhomework.dto.StudentDto;
-import org.ypecommercesample.schoolhomework.dto.TeacherDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +15,7 @@ import java.util.UUID;
 public class LessonResponse {
     private UUID id;
     private String name;
-    private TeacherDto teacherDto;
+    private UUID teacherId;
     private ClassBranchDto classBranchDto;
     private List<StudentDto> studentDtoList;
 }

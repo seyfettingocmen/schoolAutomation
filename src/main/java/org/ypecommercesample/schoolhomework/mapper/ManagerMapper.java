@@ -3,6 +3,7 @@ package org.ypecommercesample.schoolhomework.mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ypecommercesample.schoolhomework.dto.ManagerDto;
 import org.ypecommercesample.schoolhomework.entity.Manager;
+import org.ypecommercesample.schoolhomework.entity.School;
 import org.ypecommercesample.schoolhomework.request.ManagerRequest;
 import org.ypecommercesample.schoolhomework.response.ManagerResponse;
 import org.springframework.stereotype.Component;
@@ -24,23 +25,25 @@ public class ManagerMapper {
     SchoolMapper schoolMapper;
 
     public ManagerResponse dtoToResponse(ManagerDto managerDto) {
+        School school = schoolService.findSchoolById(managerDto.getSchoolId());
         return ManagerResponse.builder()
                 .id(managerDto.getId())
                 .fullName(managerDto.getFullName())
                 .tckn(managerDto.getTckn())
                 .age(managerDto.getAge())
                 .authority(managerDto.getAuthority())
-                .schoolResponse(schoolMapper.dtoToResponse(managerDto.getSchoolDto()))
+                .schoolId(school.getId())
                 .build();
     }
 
     public ManagerDto requestToDto(ManagerRequest managerRequest) {
+        School school = schoolService.findSchoolById(managerRequest.getSchoolId());
         return ManagerDto.builder()
                 .fullName(managerRequest.getFullName())
                 .age(managerRequest.getAge())
                 .tckn(managerRequest.getTckn())
                 .authority(managerRequest.getAuthority())
-                .schoolDto(schoolMapper.entityToDto(schoolService.findSchoolById(managerRequest.getSchoolId())))
+                .schoolId(school.getId())
                 .build();
     }
 
@@ -51,8 +54,8 @@ public class ManagerMapper {
         entity.setAge(managerDto.getAge());
         entity.setTckn(managerDto.getTckn());
         entity.setAuthority(managerDto.getAuthority());
-        if (managerDto.getSchoolDto() != null) {
-            entity.setSchool(schoolService.findSchoolById(managerDto.getSchoolDto().getId()));
+        if (managerDto.getSchoolId() != null) {
+            entity.setSchool(schoolService.findSchoolById(managerDto.getSchoolId()));
         }
         return entity;
     }
@@ -65,7 +68,7 @@ public class ManagerMapper {
         managerDto.setTckn(manager.getTckn());
         managerDto.setAuthority(manager.getAuthority());
         if (manager.getSchool() != null) {
-            managerDto.setSchoolDto(schoolMapper.entityToDto(schoolService.findSchoolById(manager.getSchool().getId())));
+            managerDto.setSchoolId(manager.getSchool().getId());
         }
         return managerDto;
     }

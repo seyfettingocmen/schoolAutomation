@@ -17,15 +17,15 @@ public class Lesson {
     private UUID id;
     private String name;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "branch_id")
     private ClassBranch classBranch;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id")
     private List<Student> studentList;
 }

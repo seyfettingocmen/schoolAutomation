@@ -1,7 +1,6 @@
 package org.ypecommercesample.schoolhomework.response;
 
 import lombok.*;
-import org.ypecommercesample.schoolhomework.dto.LessonDto;
 
 import java.util.UUID;
 @Getter
@@ -15,6 +14,6 @@ public class TeacherResponse {
     private String fullName;
     private int age;
     private String tckn;
-    private LessonDto lessonDto;
+    private UUID lessonId;
 
 }

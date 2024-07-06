@@ -25,7 +25,7 @@ public class ClassRoomMapper {
         return ClassRoomResponse.builder()
                 .id(classRoomDto.getId())
                 .name(classRoomDto.getName())
-                .school(classRoomDto.getSchoolDto())
+                .schoolId(classRoomDto.getSchoolDto().getId())
                 .build();
     }
 

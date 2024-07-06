@@ -23,7 +23,7 @@ public class School {
     @JsonManagedReference(value = "school-classroom")
     private List<ClassRoom> classRoomList;
 
-    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "school-manager")
     private List<Manager> managerList;
 }

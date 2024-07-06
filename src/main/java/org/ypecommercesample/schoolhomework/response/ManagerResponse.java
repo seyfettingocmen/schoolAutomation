@@ -16,5 +16,5 @@ public class ManagerResponse {
     private String fullName;
     private int age;
     private String tckn;
-    private SchoolResponse schoolResponse;
+    private UUID schoolId;
 }

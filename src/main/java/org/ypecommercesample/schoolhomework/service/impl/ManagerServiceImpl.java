@@ -67,7 +67,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public ManagerDto findManagerBySchoolId(UUID id) {
+    public ManagerDto findManagerById(UUID id) {
         return managerMapper.entityToDto(managerRepository.findById(id).get());
     }
 }

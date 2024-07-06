@@ -23,7 +23,7 @@ public class LessonServiceImpl implements LessonService {
     private LessonRepository repository;
 
     @Autowired
-    private LessonMapper lessonMapper;
+    LessonMapper lessonMapper;
 
     @Autowired
     ClassBranchMapper classBranchMapper;
@@ -56,7 +56,7 @@ public class LessonServiceImpl implements LessonService {
         Lesson lesson = repository.findById(id).orElseThrow(() -> new RuntimeException("Lesson not found"));
         lesson.setName(lessonDto.getName());
         lesson.setClassBranch(classBranchMapper.dtoToEntity(lessonDto.getClassBranchDto()));
-        lesson.setTeacher(teacherMapper.dtoToEntity(lessonDto.getTeacherDto()));
+        lesson.getTeacher().setId(lessonDto.getTeacherId());
         lesson.setStudentList(lessonDto.getStudentDtoList().stream().map(studentMapper::dtoToEntity).collect(Collectors.toList()));
         lesson = repository.save(lesson);
         return lessonMapper.entityToDto(lesson);
