@@ -1,5 +1,6 @@
 package org.ypecommercesample.schoolhomework.service.impl;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.ClassRoomDto;
 import org.ypecommercesample.schoolhomework.entity.ClassRoom;
 import org.ypecommercesample.schoolhomework.mapper.ClassRoomMapper;
@@ -24,7 +25,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 
     @Autowired
     private SchoolMapper schoolMapper;
-
+    @Transactional
     @Override
     public ClassRoomDto createClassRoom(ClassRoomDto classRoomDto) {
         return classRoomMapper.entityToDto(repository.save(classRoomMapper.dtoToEntity(classRoomDto)));
@@ -40,12 +41,12 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     public List<ClassRoomDto> getAllClassRooms() {
         return repository.findAll().stream().map(classRoomMapper::entityToDto).collect(Collectors.toList());
     }
-
+    @Transactional
     @Override
     public ClassRoomDto updateClassRoom(UUID id, ClassRoomDto classRoomDto) {
         ClassRoom classRoom = repository.findById(id).orElseThrow(() -> new RuntimeException("ClassRoom not found"));
         classRoom.setName(classRoomDto.getName());
-        classRoom.setSchool(schoolMapper.dtoToEntity(classRoomDto.getSchoolId()));
+        classRoom.setSchool(schoolMapper.dtoToEntity(classRoomDto.getSchoolDto()));
         classRoom = repository.save(classRoom);
         return classRoomMapper.entityToDto(classRoom);
     }

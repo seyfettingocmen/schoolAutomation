@@ -57,7 +57,7 @@ public class LessonServiceImpl implements LessonService {
         lesson.setName(lessonDto.getName());
         lesson.setClassBranch(classBranchMapper.dtoToEntity(lessonDto.getClassBranchDto()));
         lesson.setTeacher(teacherMapper.dtoToEntity(lessonDto.getTeacherDto()));
-        lesson.setStudentList(studentMapper.dtoToEntity(lessonDto.getStudentDtoList()));
+        lesson.setStudentList(lessonDto.getStudentDtoList().stream().map(studentMapper::dtoToEntity).collect(Collectors.toList()));
         lesson = repository.save(lesson);
         return lessonMapper.entityToDto(lesson);
     }

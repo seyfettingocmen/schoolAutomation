@@ -2,7 +2,7 @@ spring:
   application:
     name: school_homework
   datasource:
-    url: jdbc:mysql://localhost:3306/school_homework
+    url: jdbc:mysql://localhost:3306/school_homework_final
     username: root
     password: seyfettin123
     driver-class-name: com.mysql.cj.jdbc.Driver

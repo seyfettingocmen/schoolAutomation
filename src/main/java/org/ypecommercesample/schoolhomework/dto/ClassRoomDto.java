@@ -13,6 +13,6 @@ import java.util.UUID;
 public class ClassRoomDto {
     private UUID id;
     private String name;
-    private SchoolDto schoolId;
+    private SchoolDto schoolDto;
     private List<ClassBranchDto> classBranchDtoList;
 }

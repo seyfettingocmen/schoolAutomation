@@ -13,5 +13,4 @@ public class LessonRequest {
     private String name;
     private UUID studentId;
     private UUID classBranchId;
-
 }

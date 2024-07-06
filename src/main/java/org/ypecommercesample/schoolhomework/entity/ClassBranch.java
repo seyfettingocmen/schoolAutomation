@@ -18,10 +18,10 @@ public class ClassBranch {
     private UUID id;
     private String branchName;
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.ALL)
     @JoinColumn(name = "classroom_id")
     private ClassRoom classRoom;
 
-    @OneToMany(mappedBy = "classBranch")
+    @OneToMany(mappedBy = "classBranch", cascade = CascadeType.ALL)
     private List<Lesson> lessonList;
 }

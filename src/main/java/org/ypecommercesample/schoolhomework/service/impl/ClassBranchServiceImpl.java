@@ -1,5 +1,6 @@
 package org.ypecommercesample.schoolhomework.service.impl;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.ClassBranchDto;
 import org.ypecommercesample.schoolhomework.entity.ClassBranch;
 import org.ypecommercesample.schoolhomework.mapper.ClassBranchMapper;
@@ -24,6 +25,7 @@ public class ClassBranchServiceImpl implements ClassBranchService {
     @Autowired
     private ClassRoomMapper classRoomMapper;
 
+    @Transactional
     @Override
     public ClassBranchDto createClassBranch(ClassBranchDto classBranchDto) {
        return classBranchMapper.entityToDto(repository.save(classBranchMapper.dtoToEntity(classBranchDto)));
@@ -40,6 +42,7 @@ public class ClassBranchServiceImpl implements ClassBranchService {
         return repository.findAll().stream().map(classBranchMapper::entityToDto).collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public ClassBranchDto updateClassBranch(UUID id, ClassBranchDto classBranchDto) {
         ClassBranch classBranch = repository.findById(id).orElseThrow(() -> new RuntimeException("ClassBranch not found"));

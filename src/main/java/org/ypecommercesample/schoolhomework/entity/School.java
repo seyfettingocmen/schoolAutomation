@@ -1,4 +1,5 @@
 package org.ypecommercesample.schoolhomework.entity;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,8 +23,7 @@ public class School {
     @JsonManagedReference(value = "school-classroom")
     private List<ClassRoom> classRoomList;
 
-    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "school-manager")
     private List<Manager> managerList;
-
 }

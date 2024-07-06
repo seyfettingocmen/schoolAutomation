@@ -47,7 +47,7 @@ public class StudentServiceImpl implements StudentService {
         student.setFullName(studentDto.getFullName());
         student.setAge(studentDto.getAge());
         student.setTckn(studentDto.getTckn());
-        student.setLessons(studentDto.getLessonDtoList().stream().map(lessonMapper::dtoToEntity).collect(Collectors.toList()));
+        student.getLesson().setId(studentDto.getLessonId());
         return studentMapper.entityToDto(repository.save(student));
     }
 

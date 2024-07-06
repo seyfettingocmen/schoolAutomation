@@ -40,7 +40,7 @@ public class SchoolServiceImpl implements SchoolService {
     public List<SchoolDto> getAllSchools() {
         return schoolRepository.findAll().stream().map(schoolMapper::entityToDto).collect(Collectors.toList());
     }
-
+    @Transactional
     @Override
     public SchoolDto updateSchool(UUID id, SchoolDto schoolDto) {
         School school = schoolRepository.findById(id).orElseThrow(() -> new RuntimeException("School not found"));

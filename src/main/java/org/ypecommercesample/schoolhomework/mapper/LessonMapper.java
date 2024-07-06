@@ -12,6 +12,7 @@ import org.ypecommercesample.schoolhomework.service.LessonService;
 import org.ypecommercesample.schoolhomework.service.StudentService;
 import org.ypecommercesample.schoolhomework.service.TeacherService;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Component
@@ -62,18 +63,27 @@ public class LessonMapper {
 
     public LessonDto entityToDto(Lesson lesson) {
         if (lesson == null) {
-            return null; // veya uygun bir şekilde handle edebilirsiniz.
+            return null;
         }
+
         LessonDto lessonDto = new LessonDto();
         lessonDto.setName(lesson.getName());
-        lessonDto.setStudentDtoList(lesson.getStudentList().stream().map(studentMapper::entityToDto).collect(Collectors.toList()));
+
+        // Null kontrolü ekleyin
+        if (lesson.getStudentList() != null) {
+            lessonDto.setStudentDtoList(lesson.getStudentList().stream()
+                    .map(studentMapper::entityToDto)
+                    .collect(Collectors.toList()));
+        } else {
+            lessonDto.setStudentDtoList(Collections.emptyList());
+        }
 
         // Null kontrolü ekleyin
         if (lesson.getTeacher() != null) {
             lessonDto.setTeacherDto(teacherMapper.entityToDto(teacherService.findTeacherById(lesson.getTeacher().getId())));
         }
 
-
+        // Null kontrolü ekleyin
         if (lesson.getClassBranch() != null) {
             lessonDto.setClassBranchDto(classBranchMapper.entityToDto(classBranchService.findClassBranchById(lesson.getClassBranch().getId())));
         }
@@ -96,7 +106,7 @@ public class LessonMapper {
         }
 
         if (lessonDto.getStudentDtoList() != null) {
-            builder.student(studentService.findById(lessonDto.getStudentDtoList().getUuid()));
+            builder.studentList(lessonDto.getStudentDtoList().stream().map(studentMapper::dtoToEntity).collect(Collectors.toList()));
         }
 
         return builder.build();
