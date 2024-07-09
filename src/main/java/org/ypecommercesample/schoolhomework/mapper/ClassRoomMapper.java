@@ -4,58 +4,77 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.ypecommercesample.schoolhomework.dto.ClassRoomDto;
 import org.ypecommercesample.schoolhomework.dto.SchoolDto;
 import org.ypecommercesample.schoolhomework.entity.ClassRoom;
+import org.ypecommercesample.schoolhomework.entity.School;
 import org.ypecommercesample.schoolhomework.request.ClassRoomRequest;
 import org.ypecommercesample.schoolhomework.response.ClassRoomResponse;
 import org.springframework.stereotype.Component;
-import org.ypecommercesample.schoolhomework.service.SchoolService;
+import org.ypecommercesample.schoolhomework.service.impl.SchoolServiceImpl;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Component
 public class ClassRoomMapper {
 
     @Autowired
-    SchoolService schoolService;
+    private SchoolServiceImpl schoolService;
 
     @Autowired
-    SchoolService schoolServiceImpl;
+    private ClassBranchMapper classBranchMapper;
 
-    @Autowired
-    SchoolMapper schoolMapper;
 
-    public ClassRoomResponse dtoToResponse(ClassRoomDto classRoomDto) {
-        return ClassRoomResponse.builder()
-                .id(classRoomDto.getId())
-                .name(classRoomDto.getName())
-                .schoolId(classRoomDto.getSchoolDto().getId())
-                .build();
+    // DTO'yu Response'a dönüştüren method
+    public ClassRoomResponse dtoToResponse(ClassRoomDto dto) {
+        School school = schoolService.findSchoolById(dto.getSchoolId());
+        ClassRoomResponse response = new ClassRoomResponse();
+        response.setId(dto.getId());
+        response.setName(dto.getName());
+        response.setSchoolId(school.getId());
+        return response;
     }
 
+    // Request'i DTO'ya dönüştüren method
     public ClassRoomDto requestToDto(ClassRoomRequest classRoomRequest) {
+        School school = schoolService.findSchoolById(classRoomRequest.getSchoolId());
         ClassRoomDto classRoomDto = new ClassRoomDto();
         classRoomDto.setName(classRoomRequest.getName());
-        classRoomDto.setSchoolDto(schoolMapper.entityToDto(schoolService.findSchoolById(classRoomRequest.getSchoolId())));
+        classRoomDto.setSchoolId(school.getId());
         return classRoomDto;
     }
 
+    // Entity'yi DTO'ya dönüştüren method
     public ClassRoomDto entityToDto(ClassRoom classRoom) {
         ClassRoomDto classRoomDto = new ClassRoomDto();
         classRoomDto.setId(classRoom.getId());
         classRoomDto.setName(classRoom.getName());
 
+        // Null kontrolü
         if (classRoom.getSchool() != null && classRoom.getSchool().getId() != null) {
-            // Do not call schoolMapper.entityToDto() here directly to avoid recursion
             SchoolDto schoolDto = new SchoolDto();
             schoolDto.setId(classRoom.getSchool().getId());
             schoolDto.setSchoolName(classRoom.getSchool().getSchoolName());
-            classRoomDto.setSchoolDto(schoolDto);
+            classRoomDto.setSchoolId(schoolDto.getId());
         }
 
         return classRoomDto;
     }
 
+    // DTO'yu Entity'ye dönüştüren method
     public ClassRoom dtoToEntity(ClassRoomDto classRoomDto) {
-        return ClassRoom.builder()
-                .id(classRoomDto.getId())
-                .name(classRoomDto.getName())
-                .build();
+        ClassRoom classRoom = new ClassRoom();
+        classRoom.setId(classRoomDto.getId());
+        classRoom.setName(classRoomDto.getName());
+        classRoom.setSchool(schoolService.findSchoolById(classRoomDto.getSchoolId()));
+
+        // Null kontrolü ekleyelim
+        if (classRoomDto.getClassBranchDtoList() != null) {
+            classRoom.setClassBranch(classRoomDto.getClassBranchDtoList().stream()
+                    .map(classBranchMapper::dtoToEntity)
+                    .collect(Collectors.toList()));
+        } else {
+            classRoom.setClassBranch(new ArrayList<>()); // Eğer null ise boş bir liste set ediyoruz
+        }
+
+        return classRoom;
     }
 }

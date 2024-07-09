@@ -1,6 +1,5 @@
 package org.ypecommercesample.schoolhomework.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,8 +19,7 @@ public class ClassRoom {
     private String name;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "school_id")
-    @JsonBackReference(value = "school-classroom")
+    @JoinColumn(name = "school_id",referencedColumnName = "id")
     private School school;
 
     @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL)

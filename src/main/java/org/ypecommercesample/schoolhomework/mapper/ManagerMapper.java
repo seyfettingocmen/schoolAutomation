@@ -8,15 +8,14 @@ import org.ypecommercesample.schoolhomework.request.ManagerRequest;
 import org.ypecommercesample.schoolhomework.response.ManagerResponse;
 import org.springframework.stereotype.Component;
 import org.ypecommercesample.schoolhomework.service.ManagerService;
-import org.ypecommercesample.schoolhomework.service.SchoolService;
-
+import org.ypecommercesample.schoolhomework.service.impl.SchoolServiceImpl;
 
 
 @Component
 public class ManagerMapper {
 
     @Autowired
-    SchoolService schoolService;
+    private SchoolServiceImpl schoolService;
 
     @Autowired
     ManagerService managerService;

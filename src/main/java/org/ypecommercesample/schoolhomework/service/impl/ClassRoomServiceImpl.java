@@ -23,8 +23,9 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     @Autowired
     private ClassRoomMapper classRoomMapper;
 
+
     @Autowired
-    private SchoolMapper schoolMapper;
+    private SchoolServiceImpl schoolServiceImpl;
     @Transactional
     @Override
     public ClassRoomDto createClassRoom(ClassRoomDto classRoomDto) {
@@ -46,7 +47,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     public ClassRoomDto updateClassRoom(UUID id, ClassRoomDto classRoomDto) {
         ClassRoom classRoom = repository.findById(id).orElseThrow(() -> new RuntimeException("ClassRoom not found"));
         classRoom.setName(classRoomDto.getName());
-        classRoom.setSchool(schoolMapper.dtoToEntity(classRoomDto.getSchoolDto()));
+        classRoom.setSchool(schoolServiceImpl.findSchoolById(classRoomDto.getSchoolId()));
         classRoom = repository.save(classRoom);
         return classRoomMapper.entityToDto(classRoom);
     }

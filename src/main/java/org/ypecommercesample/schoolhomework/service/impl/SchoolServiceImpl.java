@@ -56,7 +56,6 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Transactional
-    @Override
     public School findSchoolById(UUID id) {
         return schoolRepository.findById(id).orElseThrow(() -> new RuntimeException("School not found"));
     }
