@@ -59,7 +59,7 @@ public class SchoolMapper {
                 classRoomDto.setName(classRoom.getName());
                 // Recursive call corrected: Avoid infinite recursion
                 if (classRoom.getSchool() != null && classRoom.getSchool().getId() != null && !classRoom.getSchool().getId().equals(school.getId())) {
-                    classRoomDto.setSchoolDto(entityToDto(classRoom.getSchool()));
+                    classRoomDto.setSchoolId(school.getId());
                 }
                 classRoomDtoList.add(classRoomDto);
             }
