@@ -30,6 +30,7 @@ public class ClassRoomMapper {
         response.setId(dto.getId());
         response.setName(dto.getName());
         response.setSchoolId(school.getId());
+        response.setClassBranchDtoList(dto.getClassBranchDtoList());
         return response;
     }
 
@@ -47,14 +48,15 @@ public class ClassRoomMapper {
         ClassRoomDto classRoomDto = new ClassRoomDto();
         classRoomDto.setId(classRoom.getId());
         classRoomDto.setName(classRoom.getName());
-
+        School school = schoolService.findSchoolById(classRoom.getSchool().getId());
         // Null kontrolü
         if (classRoom.getSchool() != null && classRoom.getSchool().getId() != null) {
             SchoolDto schoolDto = new SchoolDto();
             schoolDto.setId(classRoom.getSchool().getId());
             schoolDto.setSchoolName(classRoom.getSchool().getSchoolName());
-            classRoomDto.setSchoolId(schoolDto.getId());
+            classRoomDto.setSchoolId(school.getId());
         }
+        classRoomDto.setClassBranchDtoList(classRoom.getClassBranch().stream().map(classBranchMapper::entityToDto).collect(Collectors.toList()));
 
         return classRoomDto;
     }

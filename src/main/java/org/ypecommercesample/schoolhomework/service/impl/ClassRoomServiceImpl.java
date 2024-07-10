@@ -57,7 +57,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
         repository.deleteById(id);
     }
 
-    @Override
+
     public ClassRoom findClassRoomById(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("ClassRoom not found"));
     }

@@ -67,7 +67,6 @@ public class LessonServiceImpl implements LessonService {
         repository.deleteById(id);
     }
 
-    @Override
     public Lesson findByLessonId(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Lesson not found"));
     }

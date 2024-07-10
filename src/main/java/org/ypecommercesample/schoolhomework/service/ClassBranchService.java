@@ -13,5 +13,4 @@ public interface ClassBranchService {
     ClassBranchDto updateClassBranch(UUID id, ClassBranchDto classBranchDto);
     void deleteClassBranch(UUID id);
 
-    ClassBranch findClassBranchById(UUID id);
 }

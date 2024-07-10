@@ -56,7 +56,6 @@ public class StudentServiceImpl implements StudentService {
         repository.deleteById(id);
     }
 
-    @Override
     public Student findById(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Student not found"));
     }

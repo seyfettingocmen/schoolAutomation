@@ -13,5 +13,5 @@ public interface LessonService {
     LessonDto updateLesson(UUID id, LessonDto lessonDto);
     void deleteLesson(UUID id);
 
-    Lesson findByLessonId(UUID id);
+
 }

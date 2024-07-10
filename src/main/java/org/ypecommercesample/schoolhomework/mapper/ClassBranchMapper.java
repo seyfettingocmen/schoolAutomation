@@ -7,6 +7,7 @@ import org.ypecommercesample.schoolhomework.request.ClassBranchRequest;
 import org.ypecommercesample.schoolhomework.response.ClassBranchResponse;
 import org.springframework.stereotype.Component;
 import org.ypecommercesample.schoolhomework.service.ClassRoomService;
+import org.ypecommercesample.schoolhomework.service.impl.ClassRoomServiceImpl;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -17,15 +18,16 @@ public class ClassBranchMapper {
     ClassRoomMapper classRoomMapper;
 
     @Autowired
-    ClassRoomService classRoomService;
+    ClassRoomServiceImpl classRoomService;
 
     @Autowired
     LessonMapper lessonMapper;
+
     public ClassBranchResponse dtoToResponse(ClassBranchDto dto) {
         return ClassBranchResponse.builder()
                 .id(dto.getId())
                 .branchName(dto.getBranchName())
-                .classRoomId(dto.getClassRoomDto())
+                .classRoomId(dto.getClassRoomDto().getId())
                 .build();
     }
 

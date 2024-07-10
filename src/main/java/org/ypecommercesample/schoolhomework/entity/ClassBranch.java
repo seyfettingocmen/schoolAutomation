@@ -18,7 +18,7 @@ public class ClassBranch {
     private UUID id;
     private String branchName;
 
-    @ManyToOne( cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "classroom_id")
     private ClassRoom classRoom;
 

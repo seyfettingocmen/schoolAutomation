@@ -15,6 +15,6 @@ import java.util.UUID;
 public class ClassBranchResponse {
     private UUID id;
     private String branchName;
-    private ClassRoomDto classRoomId;
+    private UUID classRoomId;
     private List<LessonDto> lessonDtoList;
 }

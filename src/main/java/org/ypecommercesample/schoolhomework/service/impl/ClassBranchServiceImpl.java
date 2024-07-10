@@ -58,7 +58,6 @@ public class ClassBranchServiceImpl implements ClassBranchService {
         repository.deleteById(id);
     }
 
-    @Override
     public ClassBranch findClassBranchById(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("ClassBranch not found"));
     }

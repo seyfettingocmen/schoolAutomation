@@ -61,7 +61,6 @@ public class TeacherServiceImpl implements TeacherService {
         repository.deleteById(id);
     }
 
-    @Override
     public Teacher findTeacherById(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Teacher not found with id: " + id));
     }

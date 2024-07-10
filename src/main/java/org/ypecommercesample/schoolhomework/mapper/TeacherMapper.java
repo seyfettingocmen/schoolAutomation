@@ -8,17 +8,16 @@ import org.ypecommercesample.schoolhomework.entity.Teacher;
 import org.ypecommercesample.schoolhomework.request.TeacherRequest;
 import org.ypecommercesample.schoolhomework.response.TeacherResponse;
 import org.ypecommercesample.schoolhomework.service.LessonService;
+import org.ypecommercesample.schoolhomework.service.impl.LessonServiceImpl;
 
 import java.util.UUID;
 
 @Component
 public class TeacherMapper {
 
-    @Autowired
-    private LessonMapper lessonMapper;
 
     @Autowired
-    private LessonService lessonService;
+    private LessonServiceImpl lessonService;
 
     public TeacherDto requestToDto(TeacherRequest teacherRequest) {
         if (teacherRequest == null) {

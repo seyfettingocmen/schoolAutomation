@@ -8,6 +8,8 @@ import org.ypecommercesample.schoolhomework.entity.Lesson;
 import org.ypecommercesample.schoolhomework.request.LessonRequest;
 import org.ypecommercesample.schoolhomework.response.LessonResponse;
 import org.ypecommercesample.schoolhomework.service.*;
+import org.ypecommercesample.schoolhomework.service.impl.ClassBranchServiceImpl;
+import org.ypecommercesample.schoolhomework.service.impl.TeacherServiceImpl;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -21,7 +23,7 @@ public class LessonMapper {
     LessonService lessonService;
 
     @Autowired
-    TeacherService teacherService;
+    TeacherServiceImpl teacherService;
 
     @Autowired
     StudentService studentService;
@@ -33,7 +35,7 @@ public class LessonMapper {
     ClassBranchMapper classBranchMapper;
 
     @Autowired
-    ClassBranchService classBranchService;
+    ClassBranchServiceImpl classBranchService;
 
     // LessonDto nesnesini LessonResponse nesnesine dönüştürür
     public LessonResponse dtoToResponse(LessonDto lessonDto) {
