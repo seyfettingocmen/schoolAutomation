@@ -21,11 +21,9 @@ public class Lesson {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "branch_id")
     private ClassBranch classBranch;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "student_id")
-    private List<Student> studentList;
-}
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
+    private List<Student> studentList;}

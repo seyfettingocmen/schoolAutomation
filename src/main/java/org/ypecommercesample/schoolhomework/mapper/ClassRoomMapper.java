@@ -1,6 +1,7 @@
 package org.ypecommercesample.schoolhomework.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.ypecommercesample.schoolhomework.dto.ClassBranchDto;
 import org.ypecommercesample.schoolhomework.dto.ClassRoomDto;
 import org.ypecommercesample.schoolhomework.dto.SchoolDto;
 import org.ypecommercesample.schoolhomework.entity.ClassRoom;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.ypecommercesample.schoolhomework.service.impl.SchoolServiceImpl;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -44,19 +47,27 @@ public class ClassRoomMapper {
     }
 
     // Entity'yi DTO'ya dönüştüren method
+// Entity'yi DTO'ya dönüştüren method
     public ClassRoomDto entityToDto(ClassRoom classRoom) {
         ClassRoomDto classRoomDto = new ClassRoomDto();
         classRoomDto.setId(classRoom.getId());
         classRoomDto.setName(classRoom.getName());
-        School school = schoolService.findSchoolById(classRoom.getSchool().getId());
-        // Null kontrolü
+
+        // School nesnesi ve SchoolDto
         if (classRoom.getSchool() != null && classRoom.getSchool().getId() != null) {
             SchoolDto schoolDto = new SchoolDto();
             schoolDto.setId(classRoom.getSchool().getId());
             schoolDto.setSchoolName(classRoom.getSchool().getSchoolName());
-            classRoomDto.setSchoolId(school.getId());
+            classRoomDto.setSchoolId(schoolDto.getId());  // SchoolDto doğru şekilde set ediliyor
         }
-        classRoomDto.setClassBranchDtoList(classRoom.getClassBranch().stream().map(classBranchMapper::entityToDto).collect(Collectors.toList()));
+
+        // ClassBranch listesi dönüştürülüyor
+        if (classRoom.getClassBranch() != null) {
+            List<ClassBranchDto> classBranchDtoList = classRoom.getClassBranch().stream()
+                    .map(classBranchMapper::entityToDto)
+                    .collect(Collectors.toList());
+            classRoomDto.setClassBranchDtoList(classBranchDtoList);
+        }
 
         return classRoomDto;
     }
@@ -79,4 +90,6 @@ public class ClassRoomMapper {
 
         return classRoom;
     }
+
+
 }

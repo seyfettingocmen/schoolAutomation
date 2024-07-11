@@ -15,7 +15,7 @@ public class Manager extends Identity {
    private UUID id;
    private int authority;
 
-   @ManyToOne(cascade = CascadeType.ALL)
-   @JoinColumn(name = "schoolId",referencedColumnName = "id")
+   @ManyToOne(fetch = FetchType.EAGER)
+   @JoinColumn(name = "school_id", referencedColumnName = "id")
    private School school;
 }

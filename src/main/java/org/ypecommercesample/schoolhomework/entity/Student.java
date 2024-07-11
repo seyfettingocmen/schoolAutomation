@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Student extends Identity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID uuid;
+    private UUID id;
 
     @ManyToOne
     private Lesson lesson;

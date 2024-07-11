@@ -6,7 +6,6 @@ import org.ypecommercesample.schoolhomework.entity.ClassBranch;
 import org.ypecommercesample.schoolhomework.request.ClassBranchRequest;
 import org.ypecommercesample.schoolhomework.response.ClassBranchResponse;
 import org.springframework.stereotype.Component;
-import org.ypecommercesample.schoolhomework.service.ClassRoomService;
 import org.ypecommercesample.schoolhomework.service.impl.ClassRoomServiceImpl;
 
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ public class ClassBranchMapper {
     @Autowired
     ClassRoomServiceImpl classRoomService;
 
+
     @Autowired
     LessonMapper lessonMapper;
 
@@ -27,13 +27,13 @@ public class ClassBranchMapper {
         return ClassBranchResponse.builder()
                 .id(dto.getId())
                 .branchName(dto.getBranchName())
-                .classRoomId(dto.getClassRoomDto().getId())
+                .classRoomId(dto.getClassRoomId())
                 .build();
     }
 
     public ClassBranchDto requestToDto(ClassBranchRequest request) {
         ClassBranchDto classBranchDto = new ClassBranchDto();
-        classBranchDto.setClassRoomDto(classRoomMapper.entityToDto(classRoomService.findClassRoomById(request.getClassRoomId())));
+        classBranchDto.setClassRoomId(request.getClassRoomId());
         classBranchDto.setBranchName(request.getBranchName());
         return classBranchDto;
     }
@@ -42,11 +42,22 @@ public class ClassBranchMapper {
         ClassBranchDto classBranchDto = new ClassBranchDto();
         classBranchDto.setId(classBranch.getId());
         classBranchDto.setBranchName(classBranch.getBranchName());
-        if (classBranch.getClassRoom() != null) {
-            classBranchDto.setClassRoomDto(classRoomMapper.entityToDto(classRoomService.findClassRoomById(classBranch.getClassRoom().getId())));
+
+        // Set ClassRoomDto only if not already set during a recursive call
+        if (classBranch.getClassRoom() != null && classBranchDto.getClassRoomId() == null) {
+            classBranchDto.setClassRoomId(classBranch.getClassRoom().getId());
         }
+
+        // Null kontrolü ekleyin (previously mentioned in your analysis)
+        if (classBranchDto.getLessonDtoList() != null) {
+            classBranchDto.setLessonDtoList(classBranch.getLessonList().stream().map(lessonMapper::entityToDto).collect(Collectors.toList()));
+        } else {
+            classBranchDto.setLessonDtoList(new ArrayList<>()); // Boş liste atayın veya ihtiyacınıza göre başka bir işlem yapın
+        }
+
         return classBranchDto;
     }
+
 
     public ClassBranch dtoToEntity(ClassBranchDto classBranchDto) {
         ClassBranch classBranch = new ClassBranch();
@@ -62,8 +73,8 @@ public class ClassBranchMapper {
             classBranch.setLessonList(new ArrayList<>()); // Boş liste atayın veya ihtiyacınıza göre başka bir işlem yapın
         }
 
-        if (classBranchDto.getClassRoomDto() != null) {
-            classBranch.setClassRoom(classRoomService.findClassRoomById(classBranchDto.getClassRoomDto().getId()));
+        if (classBranchDto.getClassRoomId() != null) {
+            classBranch.setClassRoom(classRoomService.findClassRoomById(classBranchDto.getClassRoomId()));
         }
 
         return classBranch;

@@ -48,7 +48,7 @@ public class ClassBranchServiceImpl implements ClassBranchService {
         ClassBranch classBranch = repository.findById(id).orElseThrow(() -> new RuntimeException("ClassBranch not found"));
         classBranch.setBranchName(classBranchDto.getBranchName());
         classBranch.setId(classBranchDto.getId());
-        classBranch.setClassRoom(classRoomMapper.dtoToEntity(classBranchDto.getClassRoomDto()));
+        classBranch.setClassRoom(classBranch.getClassRoom());
         classBranch = repository.save(classBranch);
         return classBranchMapper.entityToDto(classBranch);
     }

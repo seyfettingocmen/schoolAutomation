@@ -1,5 +1,6 @@
 package org.ypecommercesample.schoolhomework.controller;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.ClassBranchDto;
 import org.ypecommercesample.schoolhomework.request.ClassBranchRequest;
 import org.ypecommercesample.schoolhomework.response.ClassBranchResponse;
@@ -14,7 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("classbraches")
+@RequestMapping("classbranches")
 public class ClassBranchController {
     @Autowired
     private ClassBranchService classBranchService;
@@ -22,6 +23,8 @@ public class ClassBranchController {
     @Autowired
     private ClassBranchMapper classBranchMapper;
 
+
+    @Transactional
     @PostMapping
     public ClassBranchResponse createClassBranch(@RequestBody ClassBranchRequest classBranchRequest) {
         return classBranchMapper.dtoToResponse(classBranchService.createClassBranch(classBranchMapper.requestToDto(classBranchRequest)));

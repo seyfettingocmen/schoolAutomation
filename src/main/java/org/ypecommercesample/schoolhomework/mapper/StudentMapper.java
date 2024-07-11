@@ -46,7 +46,7 @@ public class StudentMapper {
         }
 
         return StudentDto.builder()
-                .uuid(student.getUuid())
+                .uuid(student.getId())
                 .age(student.getAge())
                 .tckn(student.getTckn())
                 .fullName(student.getFullName())
@@ -56,7 +56,7 @@ public class StudentMapper {
 
     public Student dtoToEntity(StudentDto studentDto) {
         Student student = new Student();
-        student.setUuid(studentDto.getUuid());
+        student.setId(studentDto.getUuid());
         student.setFullName(studentDto.getFullName());
         student.setAge(studentDto.getAge());
         student.setTckn(studentDto.getTckn());
