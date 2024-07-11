@@ -4,7 +4,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.ClassRoomDto;
 import org.ypecommercesample.schoolhomework.entity.ClassRoom;
 import org.ypecommercesample.schoolhomework.mapper.ClassRoomMapper;
-import org.ypecommercesample.schoolhomework.mapper.SchoolMapper;
 import org.ypecommercesample.schoolhomework.repository.ClassRoomRepository;
 import org.ypecommercesample.schoolhomework.service.ClassRoomService;
 import org.springframework.beans.factory.annotation.Autowired;

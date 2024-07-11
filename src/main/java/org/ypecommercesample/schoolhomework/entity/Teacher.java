@@ -1,7 +1,6 @@
 package org.ypecommercesample.schoolhomework.entity;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.List;
 import java.util.UUID;
 
 @Entity

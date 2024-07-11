@@ -22,8 +22,6 @@ public class ClassBranchServiceImpl implements ClassBranchService {
 
     @Autowired
     private ClassBranchMapper classBranchMapper;
-    @Autowired
-    private ClassRoomMapper classRoomMapper;
 
     @Transactional
     @Override
