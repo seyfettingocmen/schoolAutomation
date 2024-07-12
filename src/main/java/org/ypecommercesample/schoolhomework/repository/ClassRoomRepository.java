@@ -6,4 +6,5 @@ import org.ypecommercesample.schoolhomework.entity.ClassRoom;
 import java.util.UUID;
 
 public interface ClassRoomRepository extends JpaRepository<ClassRoom, UUID> {
+
 }

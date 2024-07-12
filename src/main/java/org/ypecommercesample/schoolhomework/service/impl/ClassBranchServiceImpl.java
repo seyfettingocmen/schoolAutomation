@@ -4,7 +4,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.ClassBranchDto;
 import org.ypecommercesample.schoolhomework.entity.ClassBranch;
 import org.ypecommercesample.schoolhomework.mapper.ClassBranchMapper;
-import org.ypecommercesample.schoolhomework.mapper.ClassRoomMapper;
 import org.ypecommercesample.schoolhomework.repository.ClassBranchRepository;
 import org.ypecommercesample.schoolhomework.service.ClassBranchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +57,9 @@ public class ClassBranchServiceImpl implements ClassBranchService {
 
     public ClassBranch findClassBranchById(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("ClassBranch not found"));
+    }
+
+    public List<ClassBranch> findAllClassBrances(List<ClassBranchDto> classBranchDtoList) {
+        return repository.findAll();
     }
 }

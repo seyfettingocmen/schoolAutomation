@@ -14,6 +14,6 @@ public class LessonDto {
     private UUID id;
     private String name;
     private UUID teacherId;
-    private ClassBranchDto classBranchDto;
+    private UUID classBranchId;
     private List<StudentDto> studentDtoList;
 }

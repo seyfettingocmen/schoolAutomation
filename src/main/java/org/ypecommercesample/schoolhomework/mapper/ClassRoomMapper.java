@@ -3,15 +3,15 @@ package org.ypecommercesample.schoolhomework.mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.ypecommercesample.schoolhomework.dto.ClassBranchDto;
 import org.ypecommercesample.schoolhomework.dto.ClassRoomDto;
-import org.ypecommercesample.schoolhomework.dto.SchoolDto;
+import org.ypecommercesample.schoolhomework.entity.ClassBranch;
 import org.ypecommercesample.schoolhomework.entity.ClassRoom;
 import org.ypecommercesample.schoolhomework.entity.School;
 import org.ypecommercesample.schoolhomework.request.ClassRoomRequest;
 import org.ypecommercesample.schoolhomework.response.ClassRoomResponse;
 import org.springframework.stereotype.Component;
+import org.ypecommercesample.schoolhomework.service.impl.ClassBranchServiceImpl;
 import org.ypecommercesample.schoolhomework.service.impl.SchoolServiceImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,15 +24,18 @@ public class ClassRoomMapper {
     @Autowired
     private ClassBranchMapper classBranchMapper;
 
+    @Autowired
+    private ClassBranchServiceImpl classBranchService;
 
     // DTO'yu Response'a dönüştüren method
-    public ClassRoomResponse dtoToResponse(ClassRoomDto dto) {
-        School school = schoolService.findSchoolById(dto.getSchoolId());
+    public ClassRoomResponse dtoToResponse(ClassRoomDto classRoomDto) {
+        School school = schoolService.findSchoolById(classRoomDto.getSchoolId());
+        List<ClassBranch> classBranches = classBranchService.findAllClassBrances(classRoomDto.getClassBranchDtoList());
         ClassRoomResponse response = new ClassRoomResponse();
-        response.setId(dto.getId());
-        response.setName(dto.getName());
+        response.setId(classRoomDto.getId());
+        response.setName(classRoomDto.getName());
         response.setSchoolId(school.getId());
-        response.setClassBranchDtoList(dto.getClassBranchDtoList());
+        response.setClassBranchDtoList(classBranches.stream().map(classBranchMapper::entityToDto).collect(Collectors.toList()));
         return response;
     }
 
@@ -54,10 +57,8 @@ public class ClassRoomMapper {
 
         // School nesnesi ve SchoolDto
         if (classRoom.getSchool() != null && classRoom.getSchool().getId() != null) {
-            SchoolDto schoolDto = new SchoolDto();
-            schoolDto.setId(classRoom.getSchool().getId());
-            schoolDto.setSchoolName(classRoom.getSchool().getSchoolName());
-            classRoomDto.setSchoolId(schoolDto.getId());  // SchoolDto doğru şekilde set ediliyor
+            School school = schoolService.findSchoolById(classRoom.getSchool().getId());
+            classRoomDto.setSchoolId(school.getId());
         }
 
         // ClassBranch listesi dönüştürülüyor
@@ -76,17 +77,16 @@ public class ClassRoomMapper {
         ClassRoom classRoom = new ClassRoom();
         classRoom.setId(classRoomDto.getId());
         classRoom.setName(classRoomDto.getName());
-        classRoom.setSchool(schoolService.findSchoolById(classRoomDto.getSchoolId()));
 
+        if(classRoomDto.getSchoolId() != null) {
+            classRoom.setSchool(schoolService.findSchoolById(classRoomDto.getSchoolId()));
+        }
         // Null kontrolü ekleyelim
         if (classRoomDto.getClassBranchDtoList() != null) {
             classRoom.setClassBranch(classRoomDto.getClassBranchDtoList().stream()
                     .map(classBranchMapper::dtoToEntity)
                     .collect(Collectors.toList()));
-        } else {
-            classRoom.setClassBranch(new ArrayList<>()); // Eğer null ise boş bir liste set ediyoruz
         }
-
         return classRoom;
     }
 

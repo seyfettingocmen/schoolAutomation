@@ -55,7 +55,7 @@ public class LessonServiceImpl implements LessonService {
     public LessonDto updateLesson(UUID id, LessonDto lessonDto) {
         Lesson lesson = repository.findById(id).orElseThrow(() -> new RuntimeException("Lesson not found"));
         lesson.setName(lessonDto.getName());
-        lesson.setClassBranch(classBranchMapper.dtoToEntity(lessonDto.getClassBranchDto()));
+        lesson.getClassBranch().setId(lessonDto.getClassBranchId());
         lesson.getTeacher().setId(lessonDto.getTeacherId());
         lesson.setStudentList(lessonDto.getStudentDtoList().stream().map(studentMapper::dtoToEntity).collect(Collectors.toList()));
         lesson = repository.save(lesson);
@@ -68,6 +68,15 @@ public class LessonServiceImpl implements LessonService {
     }
 
     public Lesson findByLessonId(UUID id) {
+        // id null olup olmadığını kontrol edin
+        if (id == null) {
+            throw new IllegalArgumentException("The given id must not be null");
+        }
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Lesson not found"));
+    }
+
+
+    public List<Lesson> findAllLesson(List<LessonDto> lessonDtoList) {
+        return repository.findAll();
     }
 }

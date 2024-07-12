@@ -14,6 +14,7 @@ public class Teacher extends Identity{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @OneToOne(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "lesson_id",referencedColumnName = "id")
     private Lesson lesson;
 }

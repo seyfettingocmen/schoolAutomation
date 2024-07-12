@@ -22,6 +22,6 @@ public class ClassRoom {
     @JoinColumn(name = "school_id")
     private School school;
 
-    @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<ClassBranch> classBranch;
 }

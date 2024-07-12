@@ -60,6 +60,10 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 
 
     public ClassRoom findClassRoomById(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("ClassRoom not found"));
+        return repository.findById(id).orElse(null);
+    }
+
+    public List<ClassRoom> findAllClassRoom(UUID schoolId) {
+        return repository.findAll();
     }
 }
