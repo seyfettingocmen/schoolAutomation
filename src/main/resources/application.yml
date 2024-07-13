@@ -13,4 +13,4 @@ spring:
   main:
     allow-circular-references: true
 server:
-  port: 9191
+  port: 9193

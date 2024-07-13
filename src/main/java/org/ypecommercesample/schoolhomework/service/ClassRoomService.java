@@ -13,5 +13,4 @@ public interface ClassRoomService {
     ClassRoomDto updateClassRoom(UUID id, ClassRoomDto classRoomDto);
     void deleteClassRoom(UUID id);
 
-    ClassRoom findClassRoomById(UUID id);
 }

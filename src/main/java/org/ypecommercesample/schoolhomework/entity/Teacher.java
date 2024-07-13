@@ -1,7 +1,6 @@
 package org.ypecommercesample.schoolhomework.entity;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -15,6 +14,7 @@ public class Teacher extends Identity{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @OneToOne(mappedBy = "teacher")
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "lesson_id",referencedColumnName = "id")
     private Lesson lesson;
 }

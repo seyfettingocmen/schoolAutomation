@@ -4,109 +4,100 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.ypecommercesample.schoolhomework.dto.ClassBranchDto;
 import org.ypecommercesample.schoolhomework.dto.LessonDto;
+import org.ypecommercesample.schoolhomework.entity.ClassBranch;
 import org.ypecommercesample.schoolhomework.entity.Lesson;
+import org.ypecommercesample.schoolhomework.entity.Teacher;
 import org.ypecommercesample.schoolhomework.request.LessonRequest;
 import org.ypecommercesample.schoolhomework.response.LessonResponse;
-import org.ypecommercesample.schoolhomework.service.*;
+import org.ypecommercesample.schoolhomework.service.impl.ClassBranchServiceImpl;
+import org.ypecommercesample.schoolhomework.service.impl.TeacherServiceImpl;
 
 import java.util.Collections;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
 public class LessonMapper {
-    @Autowired
-    TeacherMapper teacherMapper;
 
     @Autowired
-    LessonService lessonService;
+    private TeacherServiceImpl teacherService;
 
     @Autowired
-    TeacherService teacherService;
+    private StudentMapper studentMapper;
 
     @Autowired
-    StudentService studentService;
+    private ClassBranchServiceImpl classBranchService;
 
-    @Autowired
-    StudentMapper studentMapper;
-
-    @Autowired
-    ClassBranchMapper classBranchMapper;
-
-    @Autowired
-    ClassBranchService classBranchService;
-
-    // LessonDto nesnesini LessonResponse nesnesine dönüştürür
     public LessonResponse dtoToResponse(LessonDto lessonDto) {
-        return LessonResponse.builder()
-                .id(lessonDto.getId())
-                .name(lessonDto.getName())
-                .teacherId(lessonDto.getTeacherId())
-                .classBranchDto(lessonDto.getClassBranchDto())
-                .studentDtoList(lessonDto.getStudentDtoList())
-                .build();
-    }
+        Teacher teacher = lessonDto.getTeacherId() != null ?
+                teacherService.findTeacherById(lessonDto.getTeacherId()) : null;
+        ClassBranch classBranch = lessonDto.getClassBranchId() != null ?
+                classBranchService.findClassBranchById(lessonDto.getClassBranchId()) : null;
 
-    // LessonRequest nesnesini LessonDto nesnesine dönüştürür
-    public LessonDto requestToDto(LessonRequest lessonRequest) {
-        LessonDto lessonDto = new LessonDto();
-        lessonDto.setName(lessonRequest.getName());
-
-        // Null kontrolü ve yeni ClassBranchDto oluşturma
-        if (lessonRequest.getClassBranchId() != null) {
-            ClassBranchDto classBranchDto = new ClassBranchDto();
-            classBranchDto.setId(lessonRequest.getClassBranchId());
-            lessonDto.setClassBranchDto(classBranchDto);
-        }
-        return lessonDto;
-    }
-
-    // Lesson nesnesini LessonDto nesnesine dönüştürür
-    public LessonDto entityToDto(Lesson lesson) {
-        if (lesson == null) {
+        if (teacher == null && classBranch == null) {
+            // Both teacher and classBranch are null, potentially return null response
             return null;
         }
 
+        LessonResponse lessonResponse = new LessonResponse();
+        lessonResponse.setId(lessonDto.getId());
+        lessonResponse.setName(lessonDto.getName());
+        lessonResponse.setTeacherId(teacher != null ? teacher.getId() : null);
+        lessonResponse.setStudentDtoList(lessonDto.getStudentDtoList());
+        lessonResponse.setClassBranchId(classBranch != null ? classBranch.getId() : null); // Set classBranchId only if classBranch is not null
+
+        return lessonResponse;
+    }
+
+
+
+    public LessonDto requestToDto(LessonRequest lessonRequest) {
         LessonDto lessonDto = new LessonDto();
-        lessonDto.setId(lesson.getId()); // ID'yi ekledim
-        lessonDto.setName(lesson.getName());
-
-        // Null kontrolü ekleyin
-        if (lesson.getStudentList() != null) {
-            lessonDto.setStudentDtoList(lesson.getStudentList().stream()
-                    .map(studentMapper::entityToDto)
-                    .collect(Collectors.toList()));
-        } else {
-            lessonDto.setStudentDtoList(Collections.emptyList());
-        }
-
-        // Null kontrolü ekleyin
-        if (lesson.getTeacher() != null) {
-            lessonDto.setTeacherId(lesson.getTeacher().getId()); // Geliştirilmiş null kontrolü
-        }
-
-        // Null kontrolü ekleyin
-        if (lesson.getClassBranch() != null) {
-            lessonDto.setClassBranchDto(classBranchMapper.entityToDto(lesson.getClassBranch()));
-        }
+        ClassBranch classBranch = classBranchService.findClassBranchById(lessonRequest.getClassBranchId());
+        lessonDto.setName(lessonRequest.getName());
+        lessonDto.setClassBranchId(classBranch.getId());
 
         return lessonDto;
     }
 
-    // LessonDto nesnesini Lesson nesnesine dönüştürür
+    public LessonDto entityToDto(Lesson lesson) {
+        ClassBranch classBranch = classBranchService.findClassBranchById(lesson.getClassBranch().getId());
+        LessonDto lessonDto = new LessonDto();
+
+        lessonDto.setId(lesson.getId());
+        lessonDto.setName(lesson.getName());
+
+        // Handle null student list by setting an empty list
+        lessonDto.setStudentDtoList(lesson.getStudentList() != null ?
+                lesson.getStudentList().stream()
+                        .map(studentMapper::entityToDto)
+                        .collect(Collectors.toList()) : Collections.emptyList());
+
+        // Handle null teacher or teacherId by setting a default teacherId
+        UUID teacherId = lesson.getTeacher() != null ? lesson.getTeacher().getId() : null;
+        lessonDto.setTeacherId(teacherId);
+
+        lessonDto.setClassBranchId(classBranch.getId());
+        return lessonDto;
+    }
+
+
+
     public Lesson dtoToEntity(LessonDto lessonDto) {
         Lesson.LessonBuilder builder = Lesson.builder()
                 .id(lessonDto.getId())
                 .name(lessonDto.getName());
 
-        // Null kontrolü ekleyin
+        // Null kontrolleri eklendi
         if (lessonDto.getTeacherId() != null) {
             builder.teacher(teacherService.findTeacherById(lessonDto.getTeacherId()));
         }
 
-        if (lessonDto.getClassBranchDto() != null) {
-            builder.classBranch(classBranchService.findClassBranchById(lessonDto.getClassBranchDto().getId()));
+        if (lessonDto.getClassBranchId() != null) {
+            builder.classBranch(classBranchService.findClassBranchById(lessonDto.getClassBranchId()));
         }
 
+        // Student listesi için kontrol eklendi (Optional kullanımı değerlendirilebilir)
         if (lessonDto.getStudentDtoList() != null) {
             builder.studentList(lessonDto.getStudentDtoList().stream()
                     .map(studentMapper::dtoToEntity)

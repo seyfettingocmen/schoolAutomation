@@ -23,39 +23,44 @@ public class ClassRoomController {
     @Autowired
     private ClassRoomMapper classRoomMapper;
 
+    // HTTP POST isteği ile yeni bir classroom oluşturur ve HTTP 200 (OK) durum kodu ile birlikte oluşturulan classroom'un bilgilerini döner
     @PostMapping
     public ResponseEntity<ClassRoomResponse> createClassRoom(@RequestBody ClassRoomRequest classRoomRequest) {
         ClassRoomDto classRoomDto = classRoomMapper.requestToDto(classRoomRequest);
         classRoomDto = classRoomService.createClassRoom(classRoomDto);
         ClassRoomResponse classRoomResponse = classRoomMapper.dtoToResponse(classRoomDto);
-        return ResponseEntity.ok(classRoomResponse);
+        return ResponseEntity.ok(classRoomResponse); // Yanıt gövdesi olarak ClassRoomResponse objesi ve HTTP 200 döner
     }
 
+    // Belirli bir classroom'un bilgilerini HTTP 200 (OK) durum kodu ile birlikte döner
     @GetMapping("/{id}")
     public ResponseEntity<ClassRoomResponse> getClassRoomById(@PathVariable UUID id) {
         ClassRoomDto classRoomDto = classRoomService.getClassRoomById(id);
         ClassRoomResponse classRoomResponse = classRoomMapper.dtoToResponse(classRoomDto);
-        return ResponseEntity.ok(classRoomResponse);
+        return ResponseEntity.ok(classRoomResponse); // Yanıt gövdesi olarak ClassRoomResponse objesi ve HTTP 200 döner
     }
 
+    // Tüm classroom'ları HTTP 200 (OK) durum kodu ile birlikte döner
     @GetMapping
     public ResponseEntity<List<ClassRoomResponse>> getAllClassRooms() {
         List<ClassRoomDto> classRoomDtos = classRoomService.getAllClassRooms();
         List<ClassRoomResponse> classRoomResponses = classRoomDtos.stream().map(classRoomMapper::dtoToResponse).collect(Collectors.toList());
-        return ResponseEntity.ok(classRoomResponses);
+        return ResponseEntity.ok(classRoomResponses); // Yanıt gövdesi olarak ClassRoomResponse objeleri listesi ve HTTP 200 döner
     }
 
+    // Belirli bir classroom'u günceller ve HTTP 200 (OK) durum kodu ile birlikte güncellenmiş classroom'un bilgilerini döner
     @PutMapping("/{id}")
     public ResponseEntity<ClassRoomResponse> updateClassRoom(@PathVariable UUID id, @RequestBody ClassRoomRequest classRoomRequest) {
         ClassRoomDto classRoomDto = classRoomMapper.requestToDto(classRoomRequest);
         classRoomDto = classRoomService.updateClassRoom(id, classRoomDto);
         ClassRoomResponse classRoomResponse = classRoomMapper.dtoToResponse(classRoomDto);
-        return ResponseEntity.ok(classRoomResponse);
+        return ResponseEntity.ok(classRoomResponse); // Yanıt gövdesi olarak ClassRoomResponse objesi ve HTTP 200 döner
     }
 
+    // Belirli bir classroom'u siler ve HTTP 204 (No Content) durum kodu döner
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClassRoom(@PathVariable UUID id) {
         classRoomService.deleteClassRoom(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // Yanıt gövdesi olmadan HTTP 204 döner
     }
 }

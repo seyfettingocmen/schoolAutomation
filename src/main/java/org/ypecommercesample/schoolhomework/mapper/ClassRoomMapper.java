@@ -1,16 +1,19 @@
 package org.ypecommercesample.schoolhomework.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.ypecommercesample.schoolhomework.dto.ClassBranchDto;
 import org.ypecommercesample.schoolhomework.dto.ClassRoomDto;
-import org.ypecommercesample.schoolhomework.dto.SchoolDto;
 import org.ypecommercesample.schoolhomework.entity.ClassRoom;
 import org.ypecommercesample.schoolhomework.entity.School;
 import org.ypecommercesample.schoolhomework.request.ClassRoomRequest;
 import org.ypecommercesample.schoolhomework.response.ClassRoomResponse;
 import org.springframework.stereotype.Component;
+import org.ypecommercesample.schoolhomework.service.impl.ClassBranchServiceImpl;
 import org.ypecommercesample.schoolhomework.service.impl.SchoolServiceImpl;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -22,15 +25,18 @@ public class ClassRoomMapper {
     @Autowired
     private ClassBranchMapper classBranchMapper;
 
+    @Autowired
+    private ClassBranchServiceImpl classBranchService;
 
     // DTO'yu Response'a dönüştüren method
-    public ClassRoomResponse dtoToResponse(ClassRoomDto dto) {
-        School school = schoolService.findSchoolById(dto.getSchoolId());
-        ClassRoomResponse response = new ClassRoomResponse();
-        response.setId(dto.getId());
-        response.setName(dto.getName());
-        response.setSchoolId(school.getId());
-        return response;
+    public ClassRoomResponse dtoToResponse(ClassRoomDto classRoomDto) {
+        School school = schoolService.findSchoolById(classRoomDto.getSchoolId());
+        ClassRoomResponse classRoomResponse = new ClassRoomResponse();
+        classRoomResponse.setId(classRoomDto.getId());
+        classRoomResponse.setName(classRoomDto.getName());
+        classRoomResponse.setSchoolId(school.getId());
+        classRoomResponse.setClassBranchDtoList(classRoomDto.getClassBranchDtoList());
+        return classRoomResponse;
     }
 
     // Request'i DTO'ya dönüştüren method
@@ -42,18 +48,25 @@ public class ClassRoomMapper {
         return classRoomDto;
     }
 
+    @Transactional
     // Entity'yi DTO'ya dönüştüren method
     public ClassRoomDto entityToDto(ClassRoom classRoom) {
         ClassRoomDto classRoomDto = new ClassRoomDto();
         classRoomDto.setId(classRoom.getId());
         classRoomDto.setName(classRoom.getName());
 
-        // Null kontrolü
+        // School nesnesi ve SchoolDto
         if (classRoom.getSchool() != null && classRoom.getSchool().getId() != null) {
-            SchoolDto schoolDto = new SchoolDto();
-            schoolDto.setId(classRoom.getSchool().getId());
-            schoolDto.setSchoolName(classRoom.getSchool().getSchoolName());
-            classRoomDto.setSchoolId(schoolDto.getId());
+            School school = schoolService.findSchoolById(classRoom.getSchool().getId());
+            classRoomDto.setSchoolId(school.getId());
+        }
+
+        // ClassBranch listesi dönüştürülüyor
+        if (classRoom.getClassBranch() != null) {
+            List<ClassBranchDto> classBranchDtoList = classBranchService.getClassBrachDtoList(classRoom);
+            classRoomDto.setClassBranchDtoList(classBranchDtoList);
+        }else {
+            classRoomDto.setClassBranchDtoList(Collections.emptyList());
         }
 
         return classRoomDto;
@@ -64,17 +77,18 @@ public class ClassRoomMapper {
         ClassRoom classRoom = new ClassRoom();
         classRoom.setId(classRoomDto.getId());
         classRoom.setName(classRoomDto.getName());
-        classRoom.setSchool(schoolService.findSchoolById(classRoomDto.getSchoolId()));
 
+        if(classRoomDto.getSchoolId() != null) {
+            classRoom.setSchool(schoolService.findSchoolById(classRoomDto.getSchoolId()));
+        }
         // Null kontrolü ekleyelim
         if (classRoomDto.getClassBranchDtoList() != null) {
             classRoom.setClassBranch(classRoomDto.getClassBranchDtoList().stream()
                     .map(classBranchMapper::dtoToEntity)
                     .collect(Collectors.toList()));
-        } else {
-            classRoom.setClassBranch(new ArrayList<>()); // Eğer null ise boş bir liste set ediyoruz
         }
-
         return classRoom;
     }
+
+
 }

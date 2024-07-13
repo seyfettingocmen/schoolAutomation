@@ -1,5 +1,6 @@
 package org.ypecommercesample.schoolhomework.service.impl;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.StudentDto;
 import org.ypecommercesample.schoolhomework.entity.Student;
 import org.ypecommercesample.schoolhomework.mapper.LessonMapper;
@@ -50,14 +51,14 @@ public class StudentServiceImpl implements StudentService {
         student.getLesson().setId(studentDto.getLessonId());
         return studentMapper.entityToDto(repository.save(student));
     }
-
+    @Transactional
     @Override
     public void deleteStudent(UUID id) {
         repository.deleteById(id);
     }
-
-    @Override
+    /*
     public Student findById(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Student not found"));
     }
+     */
 }

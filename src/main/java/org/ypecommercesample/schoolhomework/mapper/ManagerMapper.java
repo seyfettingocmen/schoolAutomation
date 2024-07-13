@@ -7,7 +7,6 @@ import org.ypecommercesample.schoolhomework.entity.School;
 import org.ypecommercesample.schoolhomework.request.ManagerRequest;
 import org.ypecommercesample.schoolhomework.response.ManagerResponse;
 import org.springframework.stereotype.Component;
-import org.ypecommercesample.schoolhomework.service.ManagerService;
 import org.ypecommercesample.schoolhomework.service.impl.SchoolServiceImpl;
 
 
@@ -16,12 +15,6 @@ public class ManagerMapper {
 
     @Autowired
     private SchoolServiceImpl schoolService;
-
-    @Autowired
-    ManagerService managerService;
-
-    @Autowired
-    SchoolMapper schoolMapper;
 
     public ManagerResponse dtoToResponse(ManagerDto managerDto) {
         School school = schoolService.findSchoolById(managerDto.getSchoolId());

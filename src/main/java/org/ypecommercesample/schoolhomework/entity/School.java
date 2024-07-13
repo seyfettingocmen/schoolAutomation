@@ -19,11 +19,11 @@ public class School {
     private UUID id;
     private String schoolName;
 
-    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonManagedReference(value = "school-classroom")
     private List<ClassRoom> classRoomList;
 
-    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonManagedReference(value = "school-manager")
     private List<Manager> managerList;
 }

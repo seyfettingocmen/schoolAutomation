@@ -2,6 +2,8 @@ package org.ypecommercesample.schoolhomework.service.impl;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.SchoolDto;
+import org.ypecommercesample.schoolhomework.entity.ClassRoom;
+import org.ypecommercesample.schoolhomework.entity.Manager;
 import org.ypecommercesample.schoolhomework.entity.School;
 import org.ypecommercesample.schoolhomework.mapper.SchoolMapper;
 import org.ypecommercesample.schoolhomework.repository.SchoolRepository;
@@ -21,6 +23,7 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Autowired
     private SchoolMapper schoolMapper;
+
 
     @Transactional
     @Override
@@ -49,11 +52,26 @@ public class SchoolServiceImpl implements SchoolService {
         school = schoolRepository.save(school);
         return schoolMapper.entityToDto(school);
     }
-
+    @Transactional
     @Override
     public void deleteSchool(UUID id) {
+        School school = schoolRepository.findById(id).orElseThrow();
+
+        // 1. School ve ClassRoom İlişkisini Kırma
+        for (ClassRoom classroom : school.getClassRoomList()) {
+            classroom.setSchool(null); // İlişkiyi kes
+        }
+
+        for (Manager manager : school.getManagerList()) {
+            manager.setSchool(null);
+        }
+
+        // 3. School'u Silme
         schoolRepository.deleteById(id);
     }
+
+
+
 
     @Transactional
     public School findSchoolById(UUID id) {

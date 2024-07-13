@@ -13,5 +13,4 @@ public interface StudentService {
     StudentDto updateStudent(UUID id, StudentDto studentDto);
     void deleteStudent(UUID id);
 
-    Student findById(UUID id);
 }

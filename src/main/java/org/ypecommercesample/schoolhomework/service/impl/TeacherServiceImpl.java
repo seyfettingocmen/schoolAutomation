@@ -2,8 +2,8 @@ package org.ypecommercesample.schoolhomework.service.impl;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.TeacherDto;
+import org.ypecommercesample.schoolhomework.entity.Lesson;
 import org.ypecommercesample.schoolhomework.entity.Teacher;
-import org.ypecommercesample.schoolhomework.mapper.LessonMapper;
 import org.ypecommercesample.schoolhomework.mapper.TeacherMapper;
 import org.ypecommercesample.schoolhomework.repository.TeacherRepository;
 import org.ypecommercesample.schoolhomework.service.TeacherService;
@@ -24,7 +24,7 @@ public class TeacherServiceImpl implements TeacherService {
     private TeacherMapper teacherMapper;
 
     @Autowired
-    private LessonMapper lessonMapper;
+    private LessonServiceImpl lessonService;
 
 
 
@@ -49,19 +49,38 @@ public class TeacherServiceImpl implements TeacherService {
     public TeacherDto updateTeacher(UUID id, TeacherDto teacherDto) {
         Teacher teacher = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Teacher not found with id: " + id));
+
+        // Lesson nesnesini öğretmenin ilişkili dersine göre getir
+        Lesson lesson;
+        if (teacherDto.getLessonId() != null) {
+            lesson = lessonService.findByLessonId(teacherDto.getLessonId());
+        } else {
+            lesson = teacher.getLesson(); // Öğretmenin ilişkili dersini kullan (eğer varsa)
+        }
+
         teacher.setFullName(teacherDto.getFullName());
         teacher.setAge(teacherDto.getAge());
         teacher.setTckn(teacherDto.getTckn());
-        teacher.getLesson().setId(teacherDto.getLessonId());
+
+        teacher.setLesson(lesson); // Öğretmenin dersini güncelle
+
         return teacherMapper.entityToDto(repository.save(teacher));
     }
+
+    /*
+    public Lesson findLessonByTeacherId(UUID id) {
+        Teacher teacher = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Teacher not found with id: " + id));
+        return teacher.getLesson();
+    }
+
+     */
 
     @Override
     public void deleteTeacher(UUID id) {
         repository.deleteById(id);
     }
 
-    @Override
     public Teacher findTeacherById(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Teacher not found with id: " + id));
     }

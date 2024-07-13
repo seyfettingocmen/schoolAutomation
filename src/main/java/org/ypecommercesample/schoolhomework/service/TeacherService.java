@@ -13,5 +13,4 @@ public interface TeacherService {
     TeacherDto updateTeacher(UUID id, TeacherDto teacherDto);
     void deleteTeacher(UUID id);
 
-    Teacher findTeacherById(UUID id);
 }
