@@ -67,11 +67,11 @@ public class TeacherMapper {
     }
 
     public TeacherResponse dtoToResponse(TeacherDto teacherDto) {
+        Lesson lesson = lessonService.findByLessonId(teacherDto.getLessonId());
         // teacherDto.getLessonId() null olup olmadığını kontrol edin
         if (teacherDto.getLessonId() == null) {
             throw new IllegalArgumentException("Lesson ID must not be null");
         }
-        Lesson lesson = lessonService.findByLessonId(teacherDto.getLessonId());
         return TeacherResponse.builder()
                 .id(teacherDto.getId())
                 .fullName(teacherDto.getFullName())

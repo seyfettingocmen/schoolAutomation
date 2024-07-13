@@ -68,15 +68,10 @@ public class LessonServiceImpl implements LessonService {
     }
 
     public Lesson findByLessonId(UUID id) {
-        // id null olup olmadığını kontrol edin
         if (id == null) {
-            throw new IllegalArgumentException("The given id must not be null");
+            throw new IllegalArgumentException("Ders kimliği null olamaz"); // Özel bir hata tanımlayabilirsiniz
         }
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Lesson not found"));
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Ders bulunamadı"));
     }
 
-
-    public List<Lesson> findAllLesson(List<LessonDto> lessonDtoList) {
-        return repository.findAll();
-    }
 }

@@ -15,6 +15,6 @@ public class Student extends Identity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Lesson lesson;
 }

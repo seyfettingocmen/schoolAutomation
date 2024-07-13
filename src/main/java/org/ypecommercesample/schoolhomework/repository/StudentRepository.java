@@ -6,4 +6,5 @@ import org.ypecommercesample.schoolhomework.entity.Student;
 import java.util.UUID;
 
 public interface StudentRepository extends JpaRepository<Student, UUID> {
+
 }

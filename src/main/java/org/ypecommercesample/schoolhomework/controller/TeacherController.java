@@ -14,25 +14,23 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("teachers") // Bu sınıftaki tüm yöntemleri "/teachers" temel URL'sine eşler
+@RequestMapping("teachers")
 public class TeacherController {
 
-    @Autowired // TeacherService örneğini otomatik olarak enjekte eder
+    @Autowired
     private TeacherService teacherService;
 
-    @Autowired // TeacherMapper örneğini otomatik olarak enjekte eder
+    @Autowired
     private TeacherMapper teacherMapper;
 
     // **Yeni bir Öğretmen oluşturur**
     @PostMapping
     public ResponseEntity<TeacherResponse> createTeacher(@RequestBody TeacherRequest teacherRequest) {
-        // 1. İsteği bir Teacher DTO'ya mapper kullanarak eşler
         TeacherDto teacherDto = teacherMapper.requestToDto(teacherRequest);
-        // 2. Öğretmeni oluşturmak ve kaydetmek için TeacherService'i çağırır
         teacherDto = teacherService.createTeacher(teacherDto);
-        // 3. Oluşturulan Teacher DTO'yu bir TeacherResponse'a mapper kullanarak eşler
+        //  Oluşturulan Teacher DTO'yu bir TeacherResponse'a mapper kullanarak eşler
         TeacherResponse teacherResponse = teacherMapper.dtoToResponse(teacherDto);
-        // 4. TeacherResponse nesnesi ile başarılı bir HTTP yanıtı döner (kod 200 OK)
+        //  TeacherResponse nesnesi ile başarılı bir HTTP yanıtı döner (kod 200 OK)
         return ResponseEntity.ok(teacherResponse);
     }
 

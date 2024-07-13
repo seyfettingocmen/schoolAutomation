@@ -1,9 +1,9 @@
 package org.ypecommercesample.schoolhomework.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.ClassBranchDto;
 import org.ypecommercesample.schoolhomework.dto.ClassRoomDto;
-import org.ypecommercesample.schoolhomework.entity.ClassBranch;
 import org.ypecommercesample.schoolhomework.entity.ClassRoom;
 import org.ypecommercesample.schoolhomework.entity.School;
 import org.ypecommercesample.schoolhomework.request.ClassRoomRequest;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.ypecommercesample.schoolhomework.service.impl.ClassBranchServiceImpl;
 import org.ypecommercesample.schoolhomework.service.impl.SchoolServiceImpl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,13 +31,12 @@ public class ClassRoomMapper {
     // DTO'yu Response'a dönüştüren method
     public ClassRoomResponse dtoToResponse(ClassRoomDto classRoomDto) {
         School school = schoolService.findSchoolById(classRoomDto.getSchoolId());
-        List<ClassBranch> classBranches = classBranchService.findAllClassBrances(classRoomDto.getClassBranchDtoList());
-        ClassRoomResponse response = new ClassRoomResponse();
-        response.setId(classRoomDto.getId());
-        response.setName(classRoomDto.getName());
-        response.setSchoolId(school.getId());
-        response.setClassBranchDtoList(classBranches.stream().map(classBranchMapper::entityToDto).collect(Collectors.toList()));
-        return response;
+        ClassRoomResponse classRoomResponse = new ClassRoomResponse();
+        classRoomResponse.setId(classRoomDto.getId());
+        classRoomResponse.setName(classRoomDto.getName());
+        classRoomResponse.setSchoolId(school.getId());
+        classRoomResponse.setClassBranchDtoList(classRoomDto.getClassBranchDtoList());
+        return classRoomResponse;
     }
 
     // Request'i DTO'ya dönüştüren method
@@ -48,8 +48,8 @@ public class ClassRoomMapper {
         return classRoomDto;
     }
 
+    @Transactional
     // Entity'yi DTO'ya dönüştüren method
-// Entity'yi DTO'ya dönüştüren method
     public ClassRoomDto entityToDto(ClassRoom classRoom) {
         ClassRoomDto classRoomDto = new ClassRoomDto();
         classRoomDto.setId(classRoom.getId());
@@ -63,10 +63,10 @@ public class ClassRoomMapper {
 
         // ClassBranch listesi dönüştürülüyor
         if (classRoom.getClassBranch() != null) {
-            List<ClassBranchDto> classBranchDtoList = classRoom.getClassBranch().stream()
-                    .map(classBranchMapper::entityToDto)
-                    .collect(Collectors.toList());
+            List<ClassBranchDto> classBranchDtoList = classBranchService.getClassBrachDtoList(classRoom);
             classRoomDto.setClassBranchDtoList(classBranchDtoList);
+        }else {
+            classRoomDto.setClassBranchDtoList(Collections.emptyList());
         }
 
         return classRoomDto;

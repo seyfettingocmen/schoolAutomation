@@ -26,5 +26,7 @@ public class Lesson {
     @JoinColumn(name = "branch_id")
     private ClassBranch classBranch;
 
-    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private List<Student> studentList;}
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Student> studentList;
+
+}

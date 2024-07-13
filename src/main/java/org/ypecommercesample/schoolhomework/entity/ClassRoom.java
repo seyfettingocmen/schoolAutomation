@@ -18,7 +18,7 @@ public class ClassRoom {
     private UUID id;
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "school_id")
     private School school;
 

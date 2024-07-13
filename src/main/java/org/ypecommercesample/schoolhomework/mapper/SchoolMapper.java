@@ -1,19 +1,17 @@
 package org.ypecommercesample.schoolhomework.mapper;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.ClassRoomDto;
 import org.ypecommercesample.schoolhomework.dto.ManagerDto;
 import org.ypecommercesample.schoolhomework.dto.SchoolDto;
-import org.ypecommercesample.schoolhomework.entity.ClassRoom;
-import org.ypecommercesample.schoolhomework.entity.Manager;
 import org.ypecommercesample.schoolhomework.entity.School;
 import org.ypecommercesample.schoolhomework.request.SchoolRequest;
 import org.ypecommercesample.schoolhomework.response.SchoolResponse;
 import org.springframework.stereotype.Component;
+import org.ypecommercesample.schoolhomework.service.impl.ClassRoomServiceImpl;
+import org.ypecommercesample.schoolhomework.service.impl.ManagerServiceImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Collections;
@@ -22,10 +20,16 @@ import java.util.Collections;
 public class SchoolMapper {
 
     @Autowired
-    ClassRoomMapper classRoomMapper;
+    private ClassRoomMapper classRoomMapper;
 
     @Autowired
-    ManagerMapper managerMapper;
+    private ManagerMapper managerMapper;
+
+    @Autowired
+    private ClassRoomServiceImpl classRoomService;
+
+    @Autowired
+    private ManagerServiceImpl managerService;
 
     public SchoolResponse dtoToResponse(SchoolDto schoolDto) {
         return SchoolResponse.builder()
@@ -52,17 +56,7 @@ public class SchoolMapper {
 
         // classRoomList null değilse, her ClassRoom entity'sini ClassRoomDto'ya dönüştürür ve schoolDto'ya ekler
         if (school.getClassRoomList() != null) {
-            List<ClassRoomDto> classRoomDtoList = new ArrayList<>();
-            for (ClassRoom classRoom : school.getClassRoomList()) {
-                ClassRoomDto classRoomDto = new ClassRoomDto();
-                classRoomDto.setId(classRoom.getId());
-                classRoomDto.setName(classRoom.getName());
-                // Recursive call corrected: Avoid infinite recursion
-                if (classRoom.getSchool() != null && classRoom.getSchool().getId() != null && !classRoom.getSchool().getId().equals(school.getId())) {
-                    classRoomDto.setSchoolId(school.getId());
-                }
-                classRoomDtoList.add(classRoomDto);
-            }
+            List<ClassRoomDto> classRoomDtoList = classRoomService.getClassRoomDtoList(school);
             schoolDto.setClassRoomDtoList(classRoomDtoList);
         } else {
             schoolDto.setClassRoomDtoList(Collections.emptyList());
@@ -70,20 +64,7 @@ public class SchoolMapper {
 
         // managerList null değilse, her Manager entity'sini ManagerDto'ya dönüştürür ve schoolDto'ya ekler
         if (school.getManagerList() != null) {
-            List<ManagerDto> managerDtoList = new ArrayList<>();
-            for (Manager manager : school.getManagerList()) {
-                ManagerDto managerDto = new ManagerDto();
-                managerDto.setId(manager.getId());
-                managerDto.setFullName(manager.getFullName());
-                managerDto.setAge(manager.getAge());
-                managerDto.setAuthority(manager.getAuthority());
-                managerDto.setTckn(manager.getTckn());
-                // Recursive call corrected: Avoid infinite recursion
-                if (manager.getSchool() != null && manager.getSchool().getId() != null && !manager.getSchool().getId().equals(school.getId())) {
-                    managerDto.setSchoolId(school.getId());
-                }
-                managerDtoList.add(managerDto);
-            }
+            List<ManagerDto> managerDtoList = managerService.getManagerDtoList(school);
             schoolDto.setManagerDtoList(managerDtoList); // managerDtoList'in schoolDto'ya eklenmesi unutulmuştu, düzeltildi
         } else {
             schoolDto.setManagerDtoList(Collections.emptyList());
@@ -91,7 +72,6 @@ public class SchoolMapper {
 
         return schoolDto;
     }
-
 
     public School dtoToEntity(SchoolDto schoolDto) {
         return School.builder()
