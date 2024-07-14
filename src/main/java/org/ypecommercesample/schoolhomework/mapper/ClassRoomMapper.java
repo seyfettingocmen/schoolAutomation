@@ -9,7 +9,6 @@ import org.ypecommercesample.schoolhomework.entity.School;
 import org.ypecommercesample.schoolhomework.request.ClassRoomRequest;
 import org.ypecommercesample.schoolhomework.response.ClassRoomResponse;
 import org.springframework.stereotype.Component;
-import org.ypecommercesample.schoolhomework.service.impl.ClassBranchServiceImpl;
 import org.ypecommercesample.schoolhomework.service.impl.SchoolServiceImpl;
 
 import java.util.Collections;
@@ -25,9 +24,6 @@ public class ClassRoomMapper {
     @Autowired
     private ClassBranchMapper classBranchMapper;
 
-    @Autowired
-    private ClassBranchServiceImpl classBranchService;
-
     // DTO'yu Response'a dönüştüren method
     public ClassRoomResponse dtoToResponse(ClassRoomDto classRoomDto) {
         School school = schoolService.findSchoolById(classRoomDto.getSchoolId());
@@ -35,9 +31,20 @@ public class ClassRoomMapper {
         classRoomResponse.setId(classRoomDto.getId());
         classRoomResponse.setName(classRoomDto.getName());
         classRoomResponse.setSchoolId(school.getId());
-        classRoomResponse.setClassBranchDtoList(classRoomDto.getClassBranchDtoList());
+
+        // Sadece çekilen ClassRoom'a ait ClassBranch'leri listeye ekle
+        if (classRoomDto.getClassBranchDtoList() != null) {
+            List<ClassBranchDto> classBranchDtoList = classRoomDto.getClassBranchDtoList().stream()
+                    .filter(classBranchDto -> classBranchDto.getClassRoomId().equals(classRoomDto.getId()))
+                    .collect(Collectors.toList());
+            classRoomResponse.setClassBranchDtoList(classBranchDtoList);
+        } else {
+            classRoomResponse.setClassBranchDtoList(Collections.emptyList());
+        }
+
         return classRoomResponse;
     }
+
 
     // Request'i DTO'ya dönüştüren method
     public ClassRoomDto requestToDto(ClassRoomRequest classRoomRequest) {
@@ -63,9 +70,12 @@ public class ClassRoomMapper {
 
         // ClassBranch listesi dönüştürülüyor
         if (classRoom.getClassBranch() != null) {
-            List<ClassBranchDto> classBranchDtoList = classBranchService.getClassBrachDtoList(classRoom);
+            List<ClassBranchDto> classBranchDtoList = classRoom.getClassBranch().stream()
+                    .filter(classBranch -> classBranch.getClassRoom().getId().equals(classRoom.getId()))
+                    .map(classBranchMapper::entityToDto)
+                    .collect(Collectors.toList());
             classRoomDto.setClassBranchDtoList(classBranchDtoList);
-        }else {
+        } else {
             classRoomDto.setClassBranchDtoList(Collections.emptyList());
         }
 
