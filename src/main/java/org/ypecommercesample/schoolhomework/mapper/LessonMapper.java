@@ -2,7 +2,6 @@ package org.ypecommercesample.schoolhomework.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.ypecommercesample.schoolhomework.dto.ClassBranchDto;
 import org.ypecommercesample.schoolhomework.dto.LessonDto;
 import org.ypecommercesample.schoolhomework.entity.ClassBranch;
 import org.ypecommercesample.schoolhomework.entity.Lesson;
@@ -61,7 +60,6 @@ public class LessonMapper {
     }
 
     public LessonDto entityToDto(Lesson lesson) {
-        ClassBranch classBranch = classBranchService.findClassBranchById(lesson.getClassBranch().getId());
         LessonDto lessonDto = new LessonDto();
 
         lessonDto.setId(lesson.getId());
@@ -77,7 +75,7 @@ public class LessonMapper {
         UUID teacherId = lesson.getTeacher() != null ? lesson.getTeacher().getId() : null;
         lessonDto.setTeacherId(teacherId);
 
-        lessonDto.setClassBranchId(classBranch.getId());
+        lessonDto.setClassBranchId(lesson.getClassBranch().getId());
         return lessonDto;
     }
 

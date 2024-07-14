@@ -3,15 +3,12 @@ package org.ypecommercesample.schoolhomework.service.impl;
 import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.ClassBranchDto;
 import org.ypecommercesample.schoolhomework.entity.ClassBranch;
-import org.ypecommercesample.schoolhomework.entity.ClassRoom;
 import org.ypecommercesample.schoolhomework.mapper.ClassBranchMapper;
-import org.ypecommercesample.schoolhomework.mapper.LessonMapper;
 import org.ypecommercesample.schoolhomework.repository.ClassBranchRepository;
 import org.ypecommercesample.schoolhomework.service.ClassBranchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,9 +21,6 @@ public class ClassBranchServiceImpl implements ClassBranchService {
 
     @Autowired
     private ClassBranchMapper classBranchMapper;
-
-    @Autowired
-    private LessonMapper lessonMapper;
 
     @Transactional
     @Override
@@ -49,8 +43,8 @@ public class ClassBranchServiceImpl implements ClassBranchService {
     @Override
     public ClassBranchDto updateClassBranch(UUID id, ClassBranchDto classBranchDto) {
         ClassBranch classBranch = repository.findById(id).orElseThrow(() -> new RuntimeException("ClassBranch not found"));
+        // classBranch.setId(classBranchDto.getId());   ***** ClassBranch'ın idsini set etmeye gerek yok. *****
         classBranch.setBranchName(classBranchDto.getBranchName());
-        classBranch.setId(classBranchDto.getId());
         classBranch.setClassRoom(classBranch.getClassRoom());
         classBranch = repository.save(classBranch);
         return classBranchMapper.entityToDto(classBranch);
@@ -69,8 +63,6 @@ public class ClassBranchServiceImpl implements ClassBranchService {
     public List<ClassBranch> findAllByClassRoomId(UUID classRoomId) {
         return repository.findAllByClassRoom_Id(classRoomId);
     }
-
-     */
 
     public List<ClassBranchDto> getClassBrachDtoList(ClassRoom classRoom) {
         List<ClassBranchDto> classBranchDtoList = new ArrayList<>();
@@ -92,5 +84,7 @@ public class ClassBranchServiceImpl implements ClassBranchService {
 
         return classBranchDtoList;
     }
+
+     */
 
 }
