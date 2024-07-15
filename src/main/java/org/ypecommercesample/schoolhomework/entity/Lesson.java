@@ -18,11 +18,11 @@ public class Lesson {
     private UUID id;
     private String name;
 
-    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonManagedReference(value = "school-teacher")
     private Teacher teacher;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "branch_id")
     private ClassBranch classBranch;
 

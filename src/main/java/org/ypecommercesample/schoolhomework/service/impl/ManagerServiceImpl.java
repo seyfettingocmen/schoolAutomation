@@ -25,6 +25,9 @@ public class ManagerServiceImpl implements ManagerService {
     @Autowired
     private ManagerMapper managerMapper;
 
+    @Autowired
+    private SchoolServiceImpl schoolService;
+
 
     @Transactional
     @Override
@@ -43,16 +46,23 @@ public class ManagerServiceImpl implements ManagerService {
     public List<ManagerDto> getAllManagers() {
         return managerRepository.findAll().stream().map(managerMapper::entityToDto).collect(Collectors.toList());
     }
-
+    @Transactional
     @Override
     public ManagerDto updateManager(UUID id, ManagerDto managerDto) {
-        Manager manager = managerRepository.findById(id).orElseThrow(() -> new RuntimeException("Manager not found"));
-        manager.setFullName(managerDto.getFullName());
-        manager.setAge(managerDto.getAge());
-        manager.setTckn(managerDto.getTckn());
-        manager.setAuthority(managerDto.getAuthority());
-        manager = managerRepository.save(manager);
-        return managerMapper.entityToDto(manager);
+        Manager existingManager = managerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Manager not found"));
+
+        existingManager.setFullName(managerDto.getFullName());
+        existingManager.setAge(managerDto.getAge());
+        existingManager.setTckn(managerDto.getTckn());
+        existingManager.setAuthority(managerDto.getAuthority());
+
+        // Database'de eklemek istediğimiz var olan School'un ID'sini School tipinde newSchool'a tanımlıyoruz
+        School newSchool = schoolService.findSchoolById(managerDto.getSchoolId());
+        // Update edilecek Manager nesnesinin School nesnesini yeni School nesnesi ile değiştirme
+        existingManager.setSchool(newSchool);
+
+        return managerMapper.entityToDto(managerRepository.save(existingManager));
     }
 
     @Override
