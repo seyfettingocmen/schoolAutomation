@@ -3,10 +3,7 @@ package org.ypecommercesample.schoolhomework.service.impl;
 import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.LessonDto;
 import org.ypecommercesample.schoolhomework.entity.Lesson;
-import org.ypecommercesample.schoolhomework.mapper.ClassBranchMapper;
 import org.ypecommercesample.schoolhomework.mapper.LessonMapper;
-import org.ypecommercesample.schoolhomework.mapper.StudentMapper;
-import org.ypecommercesample.schoolhomework.mapper.TeacherMapper;
 import org.ypecommercesample.schoolhomework.repository.LessonRepository;
 import org.ypecommercesample.schoolhomework.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +20,9 @@ public class LessonServiceImpl implements LessonService {
     private LessonRepository repository;
 
     @Autowired
-    LessonMapper lessonMapper;
+    private LessonMapper lessonMapper;
 
-    @Autowired
-    ClassBranchMapper classBranchMapper;
 
-    @Autowired
-    TeacherMapper teacherMapper;
-
-    @Autowired
-    StudentMapper studentMapper;
 
     @Transactional
     @Override
@@ -51,15 +41,12 @@ public class LessonServiceImpl implements LessonService {
         return repository.findAll().stream().map(lessonMapper::entityToDto).collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public LessonDto updateLesson(UUID id, LessonDto lessonDto) {
-        Lesson lesson = repository.findById(id).orElseThrow(() -> new RuntimeException("Lesson not found"));
-        lesson.setName(lessonDto.getName());
-        lesson.getClassBranch().setId(lessonDto.getClassBranchId());
-        lesson.getTeacher().setId(lessonDto.getTeacherId());
-        lesson.setStudentList(lessonDto.getStudentDtoList().stream().map(studentMapper::dtoToEntity).collect(Collectors.toList()));
-        lesson = repository.save(lesson);
-        return lessonMapper.entityToDto(lesson);
+        Lesson existingLesson = repository.findById(id).orElseThrow(() -> new RuntimeException("Lesson not found with id: " + id));
+       existingLesson.setName(lessonDto.getName());
+        return lessonMapper.entityToDto(repository.save(existingLesson));
     }
 
     @Override
