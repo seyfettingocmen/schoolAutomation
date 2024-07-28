@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.ypeCommerceSample</groupId>
-    <artifactId>schoolHomeWork</artifactId>
+    <artifactId>schoolAutomation</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>schoolHomeWork</name>
     <description>schoolHomeWork</description>
