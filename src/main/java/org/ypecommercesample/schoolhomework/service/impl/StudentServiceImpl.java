@@ -3,7 +3,6 @@ package org.ypecommercesample.schoolhomework.service.impl;
 import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.StudentDto;
 import org.ypecommercesample.schoolhomework.entity.Student;
-import org.ypecommercesample.schoolhomework.mapper.LessonMapper;
 import org.ypecommercesample.schoolhomework.mapper.StudentLessonMapper;
 import org.ypecommercesample.schoolhomework.mapper.StudentMapper;
 import org.ypecommercesample.schoolhomework.repository.StudentRepository;
@@ -25,12 +24,10 @@ public class StudentServiceImpl implements StudentService {
     private StudentMapper studentMapper;
 
     @Autowired
-    LessonMapper lessonMapper;
-
-    @Autowired
     private StudentLessonMapper studentLessonMapper;
 
     @Override
+    @Transactional
     public StudentDto createStudent(StudentDto studentDto) {
         return studentMapper.entityToDto(repository.save(studentMapper.dtoToEntity(studentDto)));
     }
@@ -47,6 +44,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public StudentDto updateStudent(UUID id, StudentDto studentDto) {
         Student student = repository.findById(id).orElseThrow(() -> new RuntimeException("Student not found"));
         student.setFullName(studentDto.getFullName());
