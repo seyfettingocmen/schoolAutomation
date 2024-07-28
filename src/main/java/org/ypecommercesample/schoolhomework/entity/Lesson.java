@@ -18,7 +18,7 @@ public class Lesson {
     private UUID id;
     private String name;
 
-    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "school-teacher")
     private Teacher teacher;
 
@@ -26,7 +26,6 @@ public class Lesson {
     @JoinColumn(name = "branch_id")
     private ClassBranch classBranch;
 
-    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Student> studentList;
-
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<StudentLesson> studentLessons;
 }

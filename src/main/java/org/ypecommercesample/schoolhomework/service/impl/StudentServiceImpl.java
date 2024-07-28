@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ypecommercesample.schoolhomework.dto.StudentDto;
 import org.ypecommercesample.schoolhomework.entity.Student;
 import org.ypecommercesample.schoolhomework.mapper.LessonMapper;
+import org.ypecommercesample.schoolhomework.mapper.StudentLessonMapper;
 import org.ypecommercesample.schoolhomework.mapper.StudentMapper;
 import org.ypecommercesample.schoolhomework.repository.StudentRepository;
 import org.ypecommercesample.schoolhomework.service.StudentService;
@@ -25,6 +26,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     LessonMapper lessonMapper;
+
+    @Autowired
+    private StudentLessonMapper studentLessonMapper;
 
     @Override
     public StudentDto createStudent(StudentDto studentDto) {
@@ -48,7 +52,7 @@ public class StudentServiceImpl implements StudentService {
         student.setFullName(studentDto.getFullName());
         student.setAge(studentDto.getAge());
         student.setTckn(studentDto.getTckn());
-        student.getLesson().setId(studentDto.getLessonId());
+        student.setStudentLessons(studentDto.getStudentLessons().stream().map(studentLessonMapper::dtoToEntity).collect(Collectors.toList()));
         return studentMapper.entityToDto(repository.save(student));
     }
     @Transactional

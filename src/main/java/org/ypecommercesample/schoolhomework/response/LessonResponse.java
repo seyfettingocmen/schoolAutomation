@@ -1,7 +1,7 @@
 package org.ypecommercesample.schoolhomework.response;
 
 import lombok.*;
-import org.ypecommercesample.schoolhomework.dto.StudentDto;
+import org.ypecommercesample.schoolhomework.dto.StudentLessonDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,5 +16,5 @@ public class LessonResponse {
     private String name;
     private UUID teacherId;
     private UUID classBranchId;
-    private List<StudentDto> studentDtoList;
+    private List<StudentLessonDto> studentLessonDtoList;
 }

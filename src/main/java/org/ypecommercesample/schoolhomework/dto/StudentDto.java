@@ -2,6 +2,7 @@ package org.ypecommercesample.schoolhomework.dto;
 
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -15,5 +16,5 @@ public class StudentDto {
     private String fullName;
     private int age;
     private String tckn;
-    private UUID lessonId;
+    private List<StudentLessonDto> studentLessons;
 }

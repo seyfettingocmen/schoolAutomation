@@ -22,7 +22,7 @@ public class LessonMapper {
     private TeacherServiceImpl teacherService;
 
     @Autowired
-    private StudentMapper studentMapper;
+    private StudentLessonMapper studentLessonMapper;
 
     @Autowired
     private ClassBranchServiceImpl classBranchService;
@@ -34,7 +34,6 @@ public class LessonMapper {
                 classBranchService.findClassBranchById(lessonDto.getClassBranchId()) : null;
 
         if (teacher == null && classBranch == null) {
-            // Both teacher and classBranch are null, potentially return null response
             return null;
         }
 
@@ -42,13 +41,11 @@ public class LessonMapper {
         lessonResponse.setId(lessonDto.getId());
         lessonResponse.setName(lessonDto.getName());
         lessonResponse.setTeacherId(teacher != null ? teacher.getId() : null);
-        lessonResponse.setStudentDtoList(lessonDto.getStudentDtoList());
-        lessonResponse.setClassBranchId(classBranch != null ? classBranch.getId() : null); // Set classBranchId only if classBranch is not null
+        lessonResponse.setStudentLessonDtoList(lessonDto.getStudentLessonDtoList());
+        lessonResponse.setClassBranchId(classBranch != null ? classBranch.getId() : null);
 
         return lessonResponse;
     }
-
-
 
     public LessonDto requestToDto(LessonRequest lessonRequest) {
         LessonDto lessonDto = new LessonDto();
@@ -65,13 +62,11 @@ public class LessonMapper {
         lessonDto.setId(lesson.getId());
         lessonDto.setName(lesson.getName());
 
-        // Handle null student list by setting an empty list
-        lessonDto.setStudentDtoList(lesson.getStudentList() != null ?
-                lesson.getStudentList().stream()
-                        .map(studentMapper::entityToDto)
+        lessonDto.setStudentLessonDtoList(lesson.getStudentLessons() != null ?
+                lesson.getStudentLessons().stream()
+                        .map(studentLessonMapper::entityToDto)
                         .collect(Collectors.toList()) : Collections.emptyList());
 
-        // Handle null teacher or teacherId by setting a default teacherId
         UUID teacherId = lesson.getTeacher() != null ? lesson.getTeacher().getId() : null;
         lessonDto.setTeacherId(teacherId);
 
@@ -79,14 +74,11 @@ public class LessonMapper {
         return lessonDto;
     }
 
-
-
     public Lesson dtoToEntity(LessonDto lessonDto) {
         Lesson.LessonBuilder builder = Lesson.builder()
                 .id(lessonDto.getId())
                 .name(lessonDto.getName());
 
-        // Null kontrolleri eklendi
         if (lessonDto.getTeacherId() != null) {
             builder.teacher(teacherService.findTeacherById(lessonDto.getTeacherId()));
         }
@@ -95,10 +87,9 @@ public class LessonMapper {
             builder.classBranch(classBranchService.findClassBranchById(lessonDto.getClassBranchId()));
         }
 
-        // Student listesi için kontrol eklendi (Optional kullanımı değerlendirilebilir)
-        if (lessonDto.getStudentDtoList() != null) {
-            builder.studentList(lessonDto.getStudentDtoList().stream()
-                    .map(studentMapper::dtoToEntity)
+        if (lessonDto.getStudentLessonDtoList() != null) {
+            builder.studentLessons(lessonDto.getStudentLessonDtoList().stream()
+                    .map(studentLessonMapper::dtoToEntity)
                     .collect(Collectors.toList()));
         }
 
