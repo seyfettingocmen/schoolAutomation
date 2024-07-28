@@ -26,6 +26,6 @@ public class Lesson {
     @JoinColumn(name = "branch_id")
     private ClassBranch classBranch;
 
-    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<StudentLesson> studentLessons;
 }
